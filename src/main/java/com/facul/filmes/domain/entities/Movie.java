@@ -1,12 +1,12 @@
 package com.facul.filmes.domain.entities;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
 
-import javax.annotation.processing.Generated;
-
-public class Movies {
+@Data
+@Entity
+@Table(name = "movie")
+public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
