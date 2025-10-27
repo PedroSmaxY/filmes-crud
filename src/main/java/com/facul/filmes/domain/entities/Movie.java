@@ -13,6 +13,7 @@ public class Movie {
 
     private String title;
     private String genre;
-    private Integer release_year;
+    private Integer releaseYear;
+    private Integer availableCopies;
     private String director;
 }
