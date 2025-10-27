@@ -19,7 +19,7 @@ public class EmployeeCustomerController {
     }
 
     @GetMapping
-    public List<Customer> listarClientes() {
+    public List<Customer> listCustomers() {
         return repository.findAll();
     }
 }
