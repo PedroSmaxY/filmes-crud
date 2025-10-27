@@ -30,7 +30,14 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Movie> add(@RequestBody Movie movie) {
+    public ResponseEntity<Movie> add(@RequestBody MovieRequestDTO dto) {
+        Movie movie = new Movie();
+        movie.setTitle(dto.title());
+        movie.setGenre(dto.genre());
+        movie.setReleaseYear(dto.releaseYear());
+        movie.setAvailableCopies(dto.availableCopies());
+        movie.setDirector(dto.director());
+
         Movie newMovie = this.service.add(movie);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
