@@ -29,39 +29,40 @@ public class MovieService {
     @Transactional
     public void increaseAvailableCopies(Long id, int copiesToAdd) {
         var movie = this.findMovieById(id);
-        movie.setAvailableCopies(movie.getAvailableCopies() + copiesToAdd);
+        movie.setAvailableCopies((movie.getAvailableCopies() == null ? 0 : movie.getAvailableCopies()) + copiesToAdd);
         this.repository.save(movie);
     }
 
     @Transactional
     public void decreaseAvailableCopies(Long id, int copiesToDecrease) {
         var movie = this.findMovieById(id);
+        int current = movie.getAvailableCopies() == null ? 0 : movie.getAvailableCopies();
 
-        if (movie.getAvailableCopies() <= 0) {
+        if (current <= 0) {
             throw new BadRequestException("No available copies to decrease.");
         }
-
-        if (movie.getAvailableCopies() < copiesToDecrease) {
+        if (current < copiesToDecrease) {
             throw new BadRequestException("Not enough available copies to decrease.");
         }
-        movie.setAvailableCopies(movie.getAvailableCopies() - copiesToDecrease);
+
+        movie.setAvailableCopies(current - copiesToDecrease);
         this.repository.save(movie);
     }
-
 
     @Transactional
     public Movie add(Movie movie) {
         String title = normalizeTitle(movie.getTitle());
+        String director = normalizeDirector(movie.getDirector());
 
-        this.repository.findByTitle(title).ifPresent(m -> {
-            throw new DuplicateResourceException("A movie with this title already exists.");
+        this.repository.findByTitleIgnoreCaseAndDirectorIgnoreCase(title, director).ifPresent(m -> {
+            throw new DuplicateResourceException("A movie with this title and director already exists.");
         });
 
         movie.setTitle(title);
-        if (movie.getAvailableCopies() == 0) {
+        movie.setDirector(director);
+        if (movie.getAvailableCopies() == null) {
             movie.setAvailableCopies(0);
         }
-
         return repository.save(movie);
     }
 
@@ -71,9 +72,11 @@ public class MovieService {
                 .orElseThrow(() -> new ResourceNotFoundException("Movie not found."));
 
         String title = normalizeTitle(movie.getTitle());
-        repository.findByTitle(title).ifPresent(other -> {
+        String director = normalizeDirector(movie.getDirector());
+
+        repository.findByTitleIgnoreCaseAndDirectorIgnoreCase(title, director).ifPresent(other -> {
             if (!other.getId().equals(id)) {
-                throw new DuplicateResourceException("Movie with the same title already exists.");
+                throw new DuplicateResourceException("A movie with this title and director already exists.");
             }
         });
 
@@ -81,16 +84,15 @@ public class MovieService {
         existingMovie.setGenre(movie.getGenre());
         existingMovie.setReleaseYear(movie.getReleaseYear());
         existingMovie.setAvailableCopies(movie.getAvailableCopies());
-        existingMovie.setDirector(movie.getDirector());
+        existingMovie.setDirector(director);
 
         this.repository.save(existingMovie);
     }
 
     @Transactional
     public void remove(Long id) {
-       this.repository.findById(id)
-               .orElseThrow(() -> new ResourceNotFoundException("Movie not found."));
-
+        this.repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found."));
         repository.deleteById(id);
     }
 
@@ -98,7 +100,13 @@ public class MovieService {
         if (title == null || title.isBlank()) {
             throw new BadRequestException("Title is required.");
         }
-
         return title.trim();
+    }
+
+    private String normalizeDirector(String director) {
+        if (director == null || director.isBlank()) {
+            throw new BadRequestException("Director is required.");
+        }
+        return director.trim();
     }
 }
