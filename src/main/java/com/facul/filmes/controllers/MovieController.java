@@ -1,6 +1,7 @@
 package com.facul.filmes.controllers;
 
 import com.facul.filmes.domain.entities.Movie;
+import com.facul.filmes.dto.movie.MovieRequestDTO;
 import com.facul.filmes.services.MovieService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +33,39 @@ public class MovieController {
     public ResponseEntity<Movie> add(@RequestBody Movie movie) {
         Movie newMovie = this.service.add(movie);
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(newMovie.getId()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newMovie.getId())
+                .toUri();
 
         return ResponseEntity.created(uri).body(newMovie);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody MovieRequestDTO dto) {
+
+        Movie movie = new Movie();
+        movie.setId(id);
+        movie.setTitle(dto.title());
+        movie.setGenre(dto.genre());
+        movie.setReleaseYear(dto.releaseYear());
+        movie.setAvailableCopies(dto.availableCopies());
+        movie.setDirector(dto.director());
+
+        this.service.update(id, movie);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/increase-copies")
+    public ResponseEntity<Void> increaseAvailableCopies(@PathVariable Long id, @RequestParam int copies) {
+        this.service.increaseAvailableCopies(id, copies);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/decrease-copies")
+    public ResponseEntity<Void> decreaseAvailableCopies(@PathVariable Long id, @RequestParam int copies) {
+        this.service.decreaseAvailableCopies(id, copies);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
