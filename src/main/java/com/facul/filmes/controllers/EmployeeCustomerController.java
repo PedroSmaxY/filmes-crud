@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/employees/customers")
 public class EmployeeCustomerController {
-
     private final CustomerService customerService;
 
     public EmployeeCustomerController(CustomerService customerService) {
