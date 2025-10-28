@@ -63,14 +63,14 @@ public class MovieController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/increase-copies")
-    public ResponseEntity<Void> increaseAvailableCopies(@PathVariable Long id, @RequestParam int copies) {
+    @PatchMapping("/{id}/increase-copies/{copies}")
+    public ResponseEntity<Void> increaseAvailableCopies(@PathVariable Long id, @PathVariable Integer copies) {
         this.service.increaseAvailableCopies(id, copies);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/decrease-copies")
-    public ResponseEntity<Void> decreaseAvailableCopies(@PathVariable Long id, @RequestParam int copies) {
+    @PatchMapping("/{id}/decrease-copies/{copies}")
+    public ResponseEntity<Void> decreaseAvailableCopies(@PathVariable Long id, @PathVariable Integer copies) {
         this.service.decreaseAvailableCopies(id, copies);
         return ResponseEntity.noContent().build();
     }
