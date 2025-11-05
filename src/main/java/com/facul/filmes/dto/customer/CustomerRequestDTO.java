@@ -18,7 +18,7 @@ public record CustomerRequestDTO(
 
         @NotBlank
         @Pattern(
-                regexp = "^\\(\\d{2}\\)\\s9?\\d{4}-\\d{4}$",
+                regexp = "^\\(\\d{2}\\)\\s9?\\d{5}-\\d{4}$",
                 message = "O telefone deve estar no formato (XX) 9XXXX-XXXX"
         )
         String phone
