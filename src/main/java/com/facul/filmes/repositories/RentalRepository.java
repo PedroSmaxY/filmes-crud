@@ -6,5 +6,5 @@ import com.facul.filmes.domain.enums.RentalStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RentalRepository extends JpaRepository<Rental, Long> {
-    Boolean existsByCustomerIdAndMovieIdAndStatus(Long customerId, Long movie_id, RentalStatus status);
+    Boolean existsByCustomerIdAndMovieIdAndStatus(Long customerId, Long movieId, RentalStatus status);
 }
