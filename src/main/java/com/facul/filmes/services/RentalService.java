@@ -45,6 +45,12 @@ public class RentalService {
                 .orElseThrow(() -> new BadRequestException("Employee not found."));
         var movie = movieService.findMovieById(movieId);
 
+        Boolean alreadyOpen = rentalRepository
+                .existsByCustomerIdAndMovieIdAndStatus(customerId, movieId, RentalStatus.OPEN);
+        if (alreadyOpen) {
+            throw new BadRequestException("Customer already has an open rental for this movie.");
+        }
+
         movieService.decreaseAvailableCopies(movieId, 1);
 
         var rental = new Rental();
