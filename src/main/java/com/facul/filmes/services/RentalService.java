@@ -46,7 +46,7 @@ public class RentalService {
         var movie = movieService.findMovieById(movieId);
 
         Boolean alreadyOpen = rentalRepository
-                .existsByCustomerAndMovieIdAndStatus(customerId, movieId, RentalStatus.OPEN);
+                .existsByCustomerIdAndMovieIdAndStatus(customerId, movieId, RentalStatus.OPEN);
         if (alreadyOpen) {
             throw new BadRequestException("Customer already has an open rental for this movie.");
         }
