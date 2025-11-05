@@ -3,7 +3,9 @@ package com.facul.filmes.controllers;
 import com.facul.filmes.domain.entities.Customer;
 import com.facul.filmes.dto.customer.CustomerRequestDTO;
 import com.facul.filmes.services.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -39,8 +41,9 @@ public class EmployeeCustomerController {
         return customerService.findByPhone(phone);
     }
 
+    @Validated
     @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerRequestDTO dto) {
+    public ResponseEntity<Customer> createCustomer(@RequestBody @Valid CustomerRequestDTO dto) {
         Customer customer = new Customer();
         customer.setName(dto.name());
         customer.setEmail(dto.email());
@@ -56,8 +59,9 @@ public class EmployeeCustomerController {
         return ResponseEntity.created(uri).body(newCustomer);
     }
 
+    @Validated
     @PutMapping("/{customerId}")
-    public ResponseEntity<Void> updateCustomer(@PathVariable Long customerId, @RequestBody CustomerRequestDTO dto) {
+    public ResponseEntity<Void> updateCustomer(@PathVariable Long customerId, @RequestBody @Valid CustomerRequestDTO dto) {
         Customer customer = new Customer();
         customer.setName(dto.name());
         customer.setEmail(dto.email());
