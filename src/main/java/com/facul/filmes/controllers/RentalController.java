@@ -60,8 +60,19 @@ public class RentalController {
     }
 
     @PatchMapping("/{rentalId}/return")
-    public ResponseEntity<Rental> returnRental(@PathVariable Long rentalId) {
+    public ResponseEntity<RentalResponseDTO> returnRental(@PathVariable Long rentalId) {
         var rental = this.rentalService.returnRental(rentalId);
-        return ResponseEntity.ok(rental);
+
+        RentalResponseDTO rentalResponseDTO = new RentalResponseDTO(
+                rental.getId(),
+                rental.getMovie().getId(),
+                rental.getCustomer().getId(),
+                rental.getProcessedBy().getId(),
+                rental.getRentalDate(),
+                rental.getReturnDate(),
+                rental.getStatus()
+        );
+
+        return ResponseEntity.ok(rentalResponseDTO);
     }
 }
