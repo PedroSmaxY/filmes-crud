@@ -1,6 +1,5 @@
 package com.facul.filmes.controllers;
 
-import com.facul.filmes.domain.entities.Rental;
 import com.facul.filmes.dto.rental.RentalRequestDTO;
 import com.facul.filmes.dto.rental.RentalResponseDTO;
 import com.facul.filmes.services.RentalService;
